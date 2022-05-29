@@ -10,12 +10,12 @@ export default function PlanetHeader({ backButton, title="The Planets" }) {
     const navigation = useNavigation();
     return (
         <View style={styles.container}>
-            <Text preset="h2">{title}</Text>
-            {backButton && <Pressable onPress={() => {
+            {backButton && <Pressable style={{marginRight: 20}} onPress={() => {
                 navigation.goBack();
             }}>
-                <AntDesign name="left" size={16} color="white" />
+                <AntDesign name="left" size={18} color="white" />
             </Pressable>}
+            <Text preset="h2">{title}</Text>
         </View>
     )
 }
@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0.4,
         borderBottomColor: colors.white,
         flexDirection: "row",
-        justifyContent: "space-between",
         alignItems: "center",
     },
 });
