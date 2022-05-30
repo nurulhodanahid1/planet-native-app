@@ -1,5 +1,5 @@
-import { View, StyleSheet, SafeAreaView, StatusBar, FlatList, Pressable } from 'react-native';
-import React from 'react';
+import { View, StyleSheet, SafeAreaView, StatusBar, FlatList, Pressable, TextInput } from 'react-native';
+import React, {useState} from 'react';
 import Text from '../componets/text/text';
 import PlanetHeader from '../componets/planet-header';
 import { colors } from '../theme/colors';
@@ -8,7 +8,7 @@ import { spacing } from '../theme/spacing';
 import { AntDesign } from '@expo/vector-icons';  //for icons
 import { useNavigation } from '@react-navigation/native';
 
-const PlanetItem = ({item}) => {       //{ name, color }
+const PlanetItem = ({ item }) => {       //{ name, color }
     const { name, color } = item;
     const navigation = useNavigation()
     return (
@@ -28,10 +28,11 @@ const PlanetItem = ({item}) => {       //{ name, color }
 }
 
 export default function Home({ navigation }) {
+    const [list, setList] = useState(PLANET_LIST);
     const renderItem = ({ item }) => {
         // const { name, color } = item;
         return (
-            <PlanetItem item={item}/>         //name={name} color={color}
+            <PlanetItem item={item} />         //name={name} color={color}
             // <Pressable
             //     onPress={() => {
             //         navigation.navigate('Details', { planet: item })
@@ -46,12 +47,27 @@ export default function Home({ navigation }) {
             // </Pressable>
         )
     }
+    const searchFilter = (text) => {
+        const filteredList = PLANET_LIST.filter((item) => {
+            const itemName = item.name.toLowerCase();
+            const userTypedText = text.toLowerCase();
+            return( itemName.indexOf(userTypedText) > -1)
+        })
+        setList(filteredList);
+    }
     return (
         <SafeAreaView style={[styles.container, { marginTop: StatusBar.currentHeight }]}>
             <PlanetHeader />
+            <TextInput
+                placeholder="type the planet name..."
+                placeholderTextColor={colors.white}
+                autoCorrect={false}
+                style={styles.searchInput}
+                onChangeText={(text) => searchFilter(text)}
+            />
             <FlatList
                 contentContainerStyle={styles.list}
-                data={PLANET_LIST}
+                data={list}  //PLANET_LIST
                 keyExtractor={(item) => item.name}
                 renderItem={renderItem}
                 // renderItem={({ item }) => {
@@ -104,5 +120,12 @@ const styles = StyleSheet.create({
     separator: {
         borderBottomWidth: 0.6,
         borderBottomColor: colors.white,
+    },
+    searchInput: {
+        padding: spacing[4],
+        color: colors.white,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.white,
+        margin: spacing[5],
     }
 });
